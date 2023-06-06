@@ -496,7 +496,7 @@ while z == 1:
             # Informações do cliente
             cliente_teste = input("Primeiro, por favor insira o seu nome: ")
             while not verificar_letras(cliente_teste):
-                cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+                    cliente_teste = input("Primeiro, por favor insira o seu nome: ")
 
             cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
             while cpf_cnpj and not verificar_cpf(cpf_cnpj):
@@ -505,17 +505,14 @@ while z == 1:
 
             endereço_teste = input("Seu endereço por favor (Sem o número): ")
             while not verificar_letras(endereço_teste):
-                print("Endereço inválido. Por favor, insira um Endereço válido.")
                 endereço_teste = input("Seu endereço por favor (Sem o número): ")
 
             complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
             while not verificar_letras(complemento_casa):
-                print("Complemento inválido. Por favor, insira um complemento válido.")
                 complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
 
             numero_casa = input("Seu número da casa: ")
             while not verificar_numeros(numero_casa):
-                print("Número inválido. Por favor, insira um número válido.")
                 numero_casa = input("Seu número da casa: ")
 
             cep_teste = input("Seu CEP: ")
