@@ -10,6 +10,29 @@ import os
 z=1
 
 
+def return_login():
+    #login no sistema   
+    k=1   
+    os.system("cls")
+    while k==1:
+        print("Por favor insira o seu login")
+        email_login=str(input("Email:"))
+        senha_login=str(input("Senha:"))
+        if email_login in email_cliente_db and senha_login in senha_cliente_db: 
+            menu_principal_cliente()
+            k=0
+        elif email_login in email_loja_db and senha_login in senha_loja_db:
+            resposta_login_loja=str(input("Você tem cadastro como lojista \nQual menu você deseja ver ?\n[1] Menu cliente\n[2] Menu lojista \nR= "))
+            if resposta_login_loja == "1":
+                menu_principal_cliente()
+                k=0
+            elif resposta_login_loja ==  "2":
+                menu_principal_loja()
+                k=0
+            else:
+                print("Desculpa, nao consegui entender o seu pedido")
+        else:
+            print("Login e/ou senha inválidos, tente novamente")
 
 def menu_interativo1(a,b):
     x=1
@@ -207,18 +230,24 @@ def menu_principal_loja():
     o=1
     while o==1:
         os.system("cls")
-        resposta_menu_loja=str(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[2] - adicionar itens do estoque para venda\n[3] - ver os gráficos de vendas diarias ou mensais\n[4] - ver gráficos de lucros\n[5] - ver os produtos que estão no varejo\n[6] -  entrar no menu de compras\n[0] -  voltar ao menu de login\nR="))
+        resposta_menu_loja=int(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[2] - ver os gráficos de vendas diarias ou mensais\n[3] - ver gráficos de lucros\n[4] - ver os produtos que estão no varejo\n[5] -  entrar no menu de compras\n[0] -  voltar ao menu de login\nR="))
         while True:
-            if resposta_menu_loja == "1":
+            if resposta_menu_loja == 0:
+                return_login()
+            elif resposta_menu_loja == 1:
                 os.system("cls")
-                resposta_menu_produtos=str(input("Quais tipos de produtos você quer conferir ?\n[1]- Produtos roupas\n[2]- Produtos escolares\n[3]-  Produtos Comidas\n[0] voltar\nR="))
-                if resposta_menu_produtos == "1":
+                resposta_menu_produtos=int(input("Quais tipos de produtos você quer conferir ?\n[1]- Produtos roupas\n[2]- Produtos escolares\n[3]-  Produtos Comidas\n[0] voltar\nR="))
+                if resposta_menu_produtos == 1:
                     menu_interativo1(pr,vr)
-                elif resposta_menu_produtos == "2":
+                elif resposta_menu_produtos == 2:
                     menu_interativo1(pe,ve)
-                elif resposta_menu_produtos == "3":
+                elif resposta_menu_produtos == 3:
                     menu_interativo1(pc,vc)
-
+                elif resposta_menu_produtos > 3 or resposta_menu_produtos < 0:
+                    print("opção invalida")
+                elif resposta_menu_produtos == 0:
+                    break
+            # elif resposta_menu_loja == 2:
         
                     
 #login
