@@ -4,12 +4,6 @@ import os
 # a fazer ainda !!!!!!!!!!! cadastro de itens, terminar menu de lojista
 
 
-
-
-#Variavel para estrutura de repetição infinita 
-z=1
-
-
 def return_login():
     #login no sistema   
     k=1   
@@ -222,8 +216,10 @@ def menu_principal_cliente():
                     print("{}\t\tR$ {:.2f}".format(lista_pedido[i], lista_valores[i]))
                 print("-----------------------------")
                 print("TOTAL:\t\tR$ {:.2f}".format(sum(lista_valores)))
+                exit()
                 p=0
                 break
+                
 
 # função de menu principal do lojista
 def menu_principal_loja():
@@ -247,6 +243,8 @@ def menu_principal_loja():
                     print("opção invalida")
                 elif resposta_menu_produtos == 0:
                     break
+                elif  resposta_menu_produtos > 5 or resposta_menu_produtos< 0:
+                    print("opção incorreta")
             # elif resposta_menu_loja == 2:
         
                     
@@ -259,6 +257,7 @@ def login():
         print("Por favor insira o seu login")
         email_login=str(input("Email:"))
         senha_login=str(input("Senha:"))
+
         if email_login in email_cliente_db and senha_login in senha_cliente_db: 
             menu_principal_cliente()
             k=0
@@ -402,6 +401,23 @@ valores_comidas=[7.00,4.00,5.00,6.00,8.00]
 vr=valores_roupas
 ve=valores_escolares
 vc=valores_comidas
+
+#lista cadastro cliente
+cadastro_cliente=[]
+cadastro_cpfcnpj=[]
+cadastro_endereco=[]
+cadastro_complemento=[]
+cadastro_numero_casa=[]
+cadastro_cep=[]
+
+cliente_teste=0
+endereço_teste=0
+numero_casa=0
+cpf_cnpj=0
+complemento_casa=0
+cep_teste=0
+
+
 #lista de produtos para o menu 
 produtos_roupas=[
     "Tenis ", "Camisa ", "Jaqueta ", "Calça ","Boné ", "Relogio ","Perfume ",
@@ -425,62 +441,91 @@ lista_valores=[]
 
 
 
-# frase inicial 
-os.system("cls")
-print("Olá SEJA BEM VINDO a loja  da PUCPR \nVamos iniciar o seu atendimento personalizado")
+def cadastro():
+    z=1
+    os.system("cls")
+    print("Olá SEJA BEM VINDO a loja  da PUCPR \nVamos iniciar o seu atendimento personalizado")
 
 
-#cliente ou lojista
-resposta_inicio=str(input("""
-Primeiro precisamos saber se você deseja ser um cliente \nou se você deseja vender seus itens em nossa loja 
+    #cliente ou lojista
+    resposta_inicio=str(input("""
+    Primeiro precisamos saber se você deseja ser um cliente \nou se você deseja vender seus itens em nossa loja 
 
-Digite cliente para iniciar o seu cadastro como cliente 
-Digite lojista para iniciar o seu cadastro como lojista
+    Digite cliente para iniciar o seu cadastro como cliente 
+    Digite lojista para iniciar o seu cadastro como lojista
 
-R : """))
-os.system("cls")
-while z == 1:
-    if resposta_inicio.lower() == "cliente":
-        # Cadastro de cliente
-        resposta_cliente = str(input("Você já é cliente de nossa loja?\n\nR: "))
-        if resposta_cliente.lower() == "nao":
-            print("Vamos começar o seu cadastro então:")
-            # Informações do cliente
-            cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-            while not verificar_letras(cliente_teste):
-                cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
-
-            cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
-
-            # Verificação do CPF
-            while cpf_cnpj and not verificar_cpf(cpf_cnpj):
-                print("CPF inválido. Por favor, insira um CPF válido.")
+    R : """))
+    os.system("cls")
+    while z == 1:
+        if resposta_inicio.lower() == "cliente":
+            # Cadastro de cliente
+            resposta_cliente = str(input("Você já é cliente de nossa loja?\n\nR: "))
+            if resposta_cliente.lower() == "nao":
+                print("Vamos começar o seu cadastro então:")
+                # Informações registro do cliente
+                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
+                cadastro_cliente.append(cliente_teste)
+                while not verificar_letras(cliente_teste):
+                    cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+                    cadastro_cliente.append(cliente_teste)
                 cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
 
-            endereço_teste = input("Seu endereço por favor (Sem o número): ")
-            while not verificar_letras(endereço_teste):
-                print("Endereço inválido. Por favor, insira um Endereço válido.")
+                # Verificação  e cadastro do CPF
+                while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+                    print("CPF inválido. Por favor, insira um CPF válido.")
+                    cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
+
                 endereço_teste = input("Seu endereço por favor (Sem o número): ")
+                cadastro_endereco.append(endereço_teste)
+                #verificação e registro endereço
+                while not verificar_letras(endereço_teste):
+                    print("Endereço inválido. Por favor, insira um Endereço válido.")
+                    endereço_teste = input("Seu endereço por favor (Sem o número): ")
+                    cadastro_endereco.append(endereço_teste)
 
-            complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-            while not verificar_letras(complemento_casa):
-                print("Complemento inválido. Por favor, insira um complemento válido.")
                 complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-
-            numero_casa = input("Seu número da casa: ")
-            while not verificar_numeros(numero_casa):
-                print("Número inválido. Por favor, insira um número válido.")
+                cadastro_complemento.append(complemento_casa)
+                while not verificar_letras(complemento_casa):
+                    print("Complemento inválido. Por favor, insira um complemento válido.")
+                    complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
+                    cadastro_complemento.append(complemento_casa)
+                #verificação e registro numero casa
                 numero_casa = input("Seu número da casa: ")
-
-            cep_teste = input("Seu CEP: ")
-            while not verificar_cep(cep_teste):
-                print("CEP inválido. Por favor, insira um CEP válido.")
+                cadastro_numero_casa.append(numero_casa)
+                while not verificar_numeros(numero_casa):
+                    print("Número inválido. Por favor, insira um número válido.")
+                    numero_casa = input("Seu número da casa: ")
+                    cadastro_numero_casa.append(numero_casa)
+                #verificação e registro cep
                 cep_teste = input("Seu CEP: ")
+                cadastro_cep.append(cep_teste)
+                while not verificar_cep(cep_teste):
+                    print("CEP inválido. Por favor, insira um CEP válido.")
+                    cep_teste = input("Seu CEP: ")
+                    cadastro_cep.append(cep_teste)
+                #verificação e registro email
+                registro_cliente_email = str(input("Digite seu email: "))
+                while not verificar_email(registro_cliente_email):
+                    print("Email inválido. Por favor, insira um Email válido.")
+                    registro_cliente_email = input("Digite seu email: ")
 
-            registro_cliente_email = str(input("Digite seu email: "))
-            while not verificar_email(registro_cliente_email):
-                print("Email inválido. Por favor, insira um Email válido.")
-                registro_cliente_email = input("Digite seu email: ")
+                registro_cliente_senha = str(input("Digite a senha: "))
+                email_cliente_db.append(registro_cliente_email)
+                senha_cliente_db.append(registro_cliente_senha)
+                z = 0
+            elif resposta_cliente.lower() == "sim":
+                z = 0
+                pass
+        elif resposta_inicio.lower() == "lojista":
+            resposta_lojista = str(input("Você já possui o cadastro de lojista? "))
+            if resposta_lojista.lower() == "nao":
+                print("Vamos começar o seu cadastro então:")
+                # Informações do cliente
+                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
+                cadastro_cliente.append(cliente_teste)
+                while not verificar_letras(cliente_teste):
+                    cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+                    cadastro_cliente.append(cliente_teste)
 
             registro_cliente_senha = str(input("Digite a senha: "))
             email_cliente_db.append(registro_cliente_email)
@@ -489,51 +534,71 @@ while z == 1:
         elif resposta_cliente.lower() == "sim":
             z = 0
             pass
-    elif resposta_inicio.lower() == "lojista":
-        resposta_lojista = str(input("Você já possui o cadastro de lojista? "))
-        if resposta_lojista.lower() == "nao":
-            print("Vamos começar o seu cadastro então:")
-            # Informações do cliente
-            cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-            while not verificar_letras(cliente_teste):
-                cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+        elif resposta_inicio.lower() == "lojista":
+            resposta_lojista = str(input("Você já possui o cadastro de lojista? "))
+            if resposta_lojista.lower() == "nao":
+                print("Vamos começar o seu cadastro então:")
+                # Informações do cliente
+                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
+                while not verificar_letras(cliente_teste):
+                        cliente_teste = input("Primeiro, por favor insira o seu nome: ")
 
-            cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
-            while cpf_cnpj and not verificar_cpf(cpf_cnpj):
-                print("CPF inválido. Por favor, insira um CPF válido.")
                 cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
+                while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+                    print("CPF inválido. Por favor, insira um CPF válido.")
+                    cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
 
-            endereço_teste = input("Seu endereço por favor (Sem o número): ")
-            while not verificar_letras(endereço_teste):
-                print("Endereço inválido. Por favor, insira um Endereço válido.")
                 endereço_teste = input("Seu endereço por favor (Sem o número): ")
+                while not verificar_letras(endereço_teste):
+                    endereço_teste = input("Seu endereço por favor (Sem o número): ")
+                    cadastro_endereco.append(endereço_teste)
+                    while not verificar_letras(endereço_teste):
+                        print("Endereço inválido. Por favor, insira um Endereço válido.")
+                        endereço_teste = input("Seu endereço por favor (Sem o número): ")
+                        cadastro_endereco.append(endereço_teste)
 
-            complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-            while not verificar_letras(complemento_casa):
-                print("Complemento inválido. Por favor, insira um complemento válido.")
                 complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
+                while not verificar_letras(complemento_casa):
+                    complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
+                    cadastro_complemento.append(complemento_casa)
+                    while not verificar_letras(complemento_casa):
+                        print("Complemento inválido. Por favor, insira um complemento válido.")
+                        complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
+                        cadastro_complemento.append(complemento_casa)
 
-            numero_casa = input("Seu número da casa: ")
-            while not verificar_numeros(numero_casa):
-                print("Número inválido. Por favor, insira um número válido.")
                 numero_casa = input("Seu número da casa: ")
+                while not verificar_numeros(numero_casa):
+                    numero_casa = input("Seu número da casa: ")
+                    cadastro_numero_casa.append(numero_casa)
+                    while not verificar_numeros(numero_casa):
+                        print("Número inválido. Por favor, insira um número válido.")
+                        numero_casa = input("Seu número da casa: ")
+                        cadastro_numero_casa.append(numero_casa)
 
-            cep_teste = input("Seu CEP: ")
-            while not verificar_cep(cep_teste):
-                print("CEP inválido. Por favor, insira um CEP válido.")
-                cep_teste = input("Seu CEP:")
+                    cep_teste = input("Seu CEP: ")
+                    cadastro_cep.append(cep_teste)
+                    while not verificar_cep(cep_teste):
+                        print("CEP inválido. Por favor, insira um CEP válido.")
+                        cep_teste = input("Seu CEP:")
+                        cadastro_cep.append(cep_teste)
 
 
-            registro_loja_email = str(input("Digite seu email: "))
-            while not verificar_email(registro_loja_email):
-                print("Email inválido. Por favor, insira um Email válido.")
-                registro_loja_email = input("Digite seu email: ")
-            registro_loja_senha = str(input("Digite a senha: "))
-            email_loja_db.append(registro_loja_email)
-            senha_loja_db.append(registro_loja_senha)
-            z = 0
-        elif resposta_lojista.lower() == "sim":
-            z = 0
+                    registro_loja_email = str(input("Digite seu email: "))
+                    while not verificar_email(registro_loja_email):
+                        print("Email inválido. Por favor, insira um Email válido.")
+                        registro_loja_email = input("Digite seu email: ")
+                    registro_loja_senha = str(input("Digite a senha: "))
+                    email_loja_db.append(registro_loja_email)
+                    senha_loja_db.append(registro_loja_senha)
+                    z = 0
+            elif resposta_lojista.lower() == "sim":
+                    z = 0
 
-#login no sistema      
-login()
+def inicio():
+    inicio_login=int(input("Você ja possui cadastro com a gente?\n  1 - Sim\n  2 - Nao"))
+    if inicio_login == 1:
+        login()
+    elif inicio_login == 2:
+        cadastro()
+    elif inicio_login > 2 or inicio_login<1:
+        print("opção invalida")
