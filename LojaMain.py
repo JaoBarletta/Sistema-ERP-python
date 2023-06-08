@@ -466,7 +466,7 @@ def cadastro():
                 cliente_teste = input("Primeiro, por favor insira o seu nome: ")
                 cadastro_cliente.append(cliente_teste)
                 while not verificar_letras(cliente_teste):
-                    cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+                    cliente_teste = input("Primeiro, por favor insira o seu nome: ")
                     cadastro_cliente.append(cliente_teste)
                 cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
 
@@ -479,21 +479,18 @@ def cadastro():
                 cadastro_endereco.append(endereço_teste)
                 #verificação e registro endereço
                 while not verificar_letras(endereço_teste):
-                    print("Endereço inválido. Por favor, insira um Endereço válido.")
                     endereço_teste = input("Seu endereço por favor (Sem o número): ")
                     cadastro_endereco.append(endereço_teste)
 
                 complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
                 cadastro_complemento.append(complemento_casa)
                 while not verificar_letras(complemento_casa):
-                    print("Complemento inválido. Por favor, insira um complemento válido.")
                     complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
                     cadastro_complemento.append(complemento_casa)
                 #verificação e registro numero casa
                 numero_casa = input("Seu número da casa: ")
                 cadastro_numero_casa.append(numero_casa)
                 while not verificar_numeros(numero_casa):
-                    print("Número inválido. Por favor, insira um número válido.")
                     numero_casa = input("Seu número da casa: ")
                     cadastro_numero_casa.append(numero_casa)
                 #verificação e registro cep
@@ -524,7 +521,7 @@ def cadastro():
                 cliente_teste = input("Primeiro, por favor insira o seu nome: ")
                 cadastro_cliente.append(cliente_teste)
                 while not verificar_letras(cliente_teste):
-                    cliente_teste = input("Nome inválido, por favor insira o seu nome corretamente: ")
+                    cliente_teste = input("Primeiro, por favor insira o seu nome: ")
                     cadastro_cliente.append(cliente_teste)
 
             registro_cliente_senha = str(input("Digite a senha: "))
@@ -553,7 +550,6 @@ def cadastro():
                     endereço_teste = input("Seu endereço por favor (Sem o número): ")
                     cadastro_endereco.append(endereço_teste)
                     while not verificar_letras(endereço_teste):
-                        print("Endereço inválido. Por favor, insira um Endereço válido.")
                         endereço_teste = input("Seu endereço por favor (Sem o número): ")
                         cadastro_endereco.append(endereço_teste)
 
@@ -562,7 +558,6 @@ def cadastro():
                     complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
                     cadastro_complemento.append(complemento_casa)
                     while not verificar_letras(complemento_casa):
-                        print("Complemento inválido. Por favor, insira um complemento válido.")
                         complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
                         cadastro_complemento.append(complemento_casa)
 
@@ -571,7 +566,6 @@ def cadastro():
                     numero_casa = input("Seu número da casa: ")
                     cadastro_numero_casa.append(numero_casa)
                     while not verificar_numeros(numero_casa):
-                        print("Número inválido. Por favor, insira um número válido.")
                         numero_casa = input("Seu número da casa: ")
                         cadastro_numero_casa.append(numero_casa)
 
