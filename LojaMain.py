@@ -478,11 +478,11 @@ cursor.execute('''
 ''')
 
 # Perguntar se é um cliente ou lojista
-resposta_inicio = input("Você é um cliente ou lojista?\nR: ")
+resposta_inicio = input('''Você é um cliente ou lojista? ( Responda "cliente" ou "lojista" ) \nR: ''')
 
 if resposta_inicio.lower() == "cliente":
     # Cadastro de cliente
-    resposta_cliente = input("Você já possui o cadastro de cliente?\nR: ")
+    resposta_cliente = input('''Você já possui o cadastro de cliente? ( "sim" ou "nao" )\nR: ''')
 
     if resposta_cliente.lower() == "nao":
         print("Vamos começar o seu cadastro então:")
