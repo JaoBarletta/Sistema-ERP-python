@@ -1,8 +1,9 @@
 from datetime import date
 import re
 import os
+import sqlite3
+import datetime
 # a fazer ainda !!!!!!!!!!! cadastro de itens, terminar menu de lojista
-
 
 def return_login():
     #login no sistema   
@@ -443,150 +444,277 @@ lista_valores=[]
 
 def cadastro():
     z=1
-    os.system("cls")
-    print("Olá SEJA BEM VINDO a loja  da PUCPR \nVamos iniciar o seu atendimento personalizado")
+  # Conectar ao banco de dados
+conexao = sqlite3.connect('cadastro.db')
+cursor = conexao.cursor()
 
+# Criação das tabelas se não existirem
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS cliente (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        cpf_cnpj TEXT,
+        endereco TEXT,
+        complemento TEXT,
+        numero_casa TEXT,
+        cep TEXT,
+        email TEXT,
+        senha TEXT
+    )
+''')
 
-    #cliente ou lojista
-    resposta_inicio=str(input("""
-    Primeiro precisamos saber se você deseja ser um cliente \nou se você deseja vender seus itens em nossa loja 
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS lojista (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        cpf_cnpj TEXT,
+        endereco TEXT,
+        complemento TEXT,
+        numero_casa TEXT,
+        cep TEXT,
+        email TEXT,
+        senha TEXT
+    )
+''')
 
-    Digite cliente para iniciar o seu cadastro como cliente 
-    Digite lojista para iniciar o seu cadastro como lojista
+# Perguntar se é um cliente ou lojista
+resposta_inicio = input("Você é um cliente ou lojista?\nR: ")
 
-    R : """))
-    os.system("cls")
-    while z == 1:
-        if resposta_inicio.lower() == "cliente":
-            # Cadastro de cliente
-            resposta_cliente = str(input("Você já é cliente de nossa loja?\n\nR: "))
-            if resposta_cliente.lower() == "nao":
-                print("Vamos começar o seu cadastro então:")
-                # Informações registro do cliente
-                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-                cadastro_cliente.append(cliente_teste)
-                while not verificar_letras(cliente_teste):
-                    cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-                    cadastro_cliente.append(cliente_teste)
-                cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
+if resposta_inicio.lower() == "cliente":
+    # Cadastro de cliente
+    resposta_cliente = input("Você já possui o cadastro de cliente?\nR: ")
 
-                # Verificação  e cadastro do CPF
-                while cpf_cnpj and not verificar_cpf(cpf_cnpj):
-                    print("CPF inválido. Por favor, insira um CPF válido.")
-                    cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
+    if resposta_cliente.lower() == "nao":
+        print("Vamos começar o seu cadastro então:")
+        # Informações registro do cliente
+        cliente_teste = input("Primeiro, por favor insira o seu nome: ")
+        while not verificar_letras(cliente_teste):
+            cliente_teste = input("Primeiro, por favor insira o seu nome: ")
 
-                endereço_teste = input("Seu endereço por favor (Sem o número): ")
-                cadastro_endereco.append(endereço_teste)
-                #verificação e registro endereço
-                while not verificar_letras(endereço_teste):
-                    endereço_teste = input("Seu endereço por favor (Sem o número): ")
-                    cadastro_endereco.append(endereço_teste)
+        cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
+        while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+            print("CPF inválido. Por favor, insira um CPF válido.")
+            cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
 
-                complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-                cadastro_complemento.append(complemento_casa)
-                while not verificar_letras(complemento_casa):
-                    complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-                    cadastro_complemento.append(complemento_casa)
-                #verificação e registro numero casa
-                numero_casa = input("Seu número da casa: ")
-                cadastro_numero_casa.append(numero_casa)
-                while not verificar_numeros(numero_casa):
-                    numero_casa = input("Seu número da casa: ")
-                    cadastro_numero_casa.append(numero_casa)
-                #verificação e registro cep
-                cep_teste = input("Seu CEP: ")
-                cadastro_cep.append(cep_teste)
-                while not verificar_cep(cep_teste):
-                    print("CEP inválido. Por favor, insira um CEP válido.")
-                    cep_teste = input("Seu CEP: ")
-                    cadastro_cep.append(cep_teste)
-                #verificação e registro email
-                registro_cliente_email = str(input("Digite seu email: "))
-                while not verificar_email(registro_cliente_email):
-                    print("Email inválido. Por favor, insira um Email válido.")
-                    registro_cliente_email = input("Digite seu email: ")
+        # Verificar se o CPF já está cadastrado
+        cursor.execute('''
+            SELECT * FROM cliente WHERE cpf_cnpj = ?
+        ''', (cpf_cnpj,))
+        cliente_existente = cursor.fetchone()
 
-                registro_cliente_senha = str(input("Digite a senha: "))
-                email_cliente_db.append(registro_cliente_email)
-                senha_cliente_db.append(registro_cliente_senha)
-                z = 0
-            elif resposta_cliente.lower() == "sim":
-                z = 0
-                pass
-        elif resposta_inicio.lower() == "lojista":
-            resposta_lojista = str(input("Você já possui o cadastro de lojista? "))
-            if resposta_lojista.lower() == "nao":
-                print("Vamos começar o seu cadastro então:")
-                # Informações do cliente
-                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-                cadastro_cliente.append(cliente_teste)
-                while not verificar_letras(cliente_teste):
-                    cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-                    cadastro_cliente.append(cliente_teste)
+        while cliente_existente:
+            print("CPF já cadastrado. Por favor, insira um CPF diferente.")
+            cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
+            while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+                print("CPF inválido. Por favor, insira um CPF válido.")
+                cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
 
-            registro_cliente_senha = str(input("Digite a senha: "))
-            email_cliente_db.append(registro_cliente_email)
-            senha_cliente_db.append(registro_cliente_senha)
-            z = 0
-        elif resposta_cliente.lower() == "sim":
-            z = 0
-            pass
-        elif resposta_inicio.lower() == "lojista":
-            resposta_lojista = str(input("Você já possui o cadastro de lojista? "))
-            if resposta_lojista.lower() == "nao":
-                print("Vamos começar o seu cadastro então:")
-                # Informações do cliente
-                cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-                while not verificar_letras(cliente_teste):
-                        cliente_teste = input("Primeiro, por favor insira o seu nome: ")
+            cursor.execute('''
+                SELECT * FROM cliente WHERE cpf_cnpj = ?
+            ''', (cpf_cnpj,))
+            cliente_existente = cursor.fetchone()
 
-                cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
-                while cpf_cnpj and not verificar_cpf(cpf_cnpj):
-                    print("CPF inválido. Por favor, insira um CPF válido.")
-                    cpf_cnpj = input("Em seguida, o seu CPF/CNPJ (Se desejar): ")
+        endereco_teste = input("Seu endereço por favor (Sem o número): ")
+        while not verificar_letras(endereco_teste):
+            endereco_teste = input("Seu endereço por favor (Sem o número): ")
 
-                endereço_teste = input("Seu endereço por favor (Sem o número): ")
-                while not verificar_letras(endereço_teste):
-                    endereço_teste = input("Seu endereço por favor (Sem o número): ")
-                    cadastro_endereco.append(endereço_teste)
-                    while not verificar_letras(endereço_teste):
-                        endereço_teste = input("Seu endereço por favor (Sem o número): ")
-                        cadastro_endereco.append(endereço_teste)
+        complemento_casa = input("Digite um complemento para sua casa (Se desejar): ")
 
-                complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-                while not verificar_letras(complemento_casa):
-                    complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-                    cadastro_complemento.append(complemento_casa)
-                    while not verificar_letras(complemento_casa):
-                        complemento_casa = input("Seu complemento (Casa, apto, etc.): ")
-                        cadastro_complemento.append(complemento_casa)
+        numero_casa = input("Agora insira o número da casa: ")
+        while not verificar_numeros(numero_casa):
+            numero_casa = input("Agora insira o número da casa: ")
 
-                numero_casa = input("Seu número da casa: ")
-                while not verificar_numeros(numero_casa):
-                    numero_casa = input("Seu número da casa: ")
-                    cadastro_numero_casa.append(numero_casa)
-                    while not verificar_numeros(numero_casa):
-                        numero_casa = input("Seu número da casa: ")
-                        cadastro_numero_casa.append(numero_casa)
+        cep_teste = input("Insira o CEP (Somente números): ")
+        while not verificar_numeros(cep_teste):
+            cep_teste = input("Insira o CEP (Somente números): ")
 
-                    cep_teste = input("Seu CEP: ")
-                    cadastro_cep.append(cep_teste)
-                    while not verificar_cep(cep_teste):
-                        print("CEP inválido. Por favor, insira um CEP válido.")
-                        cep_teste = input("Seu CEP:")
-                        cadastro_cep.append(cep_teste)
+        # Verificar se o CEP já está cadastrado
+        cursor.execute('''
+            SELECT * FROM cliente WHERE cep = ?
+        ''', (cep_teste,))
+        cep_existente = cursor.fetchone()
 
+        while cep_existente:
+            print("CEP já cadastrado. Por favor, insira um CEP diferente.")
+            cep_teste = input("Insira o CEP (Somente números): ")
+            while not verificar_numeros(cep_teste):
+                cep_teste = input("Insira o CEP (Somente números): ")
 
-                    registro_loja_email = str(input("Digite seu email: "))
-                    while not verificar_email(registro_loja_email):
-                        print("Email inválido. Por favor, insira um Email válido.")
-                        registro_loja_email = input("Digite seu email: ")
-                    registro_loja_senha = str(input("Digite a senha: "))
-                    email_loja_db.append(registro_loja_email)
-                    senha_loja_db.append(registro_loja_senha)
-                    z = 0
-            elif resposta_lojista.lower() == "sim":
-                    z = 0
+            cursor.execute('''
+                SELECT * FROM cliente WHERE cep = ?
+            ''', (cep_teste,))
+            cep_existente = cursor.fetchone()
+
+        registro_cliente_email = input("Digite o seu email: ")
+        while not verificar_email(registro_cliente_email):
+            registro_cliente_email = input("Digite o seu email: ")
+
+        # Verificar se o email já está cadastrado
+        cursor.execute('''
+            SELECT * FROM cliente WHERE email = ?
+        ''', (registro_cliente_email,))
+        email_existente = cursor.fetchone()
+
+        while email_existente:
+            print("Email já cadastrado. Por favor, insira um email diferente.")
+            registro_cliente_email = input("Digite o seu email: ")
+            while not verificar_email(registro_cliente_email):
+                registro_cliente_email = input("Digite o seu email: ")
+
+            cursor.execute('''
+                SELECT * FROM cliente WHERE email = ?
+            ''', (registro_cliente_email,))
+            email_existente = cursor.fetchone()
+
+        registro_cliente_senha = input("Digite uma senha: ")
+
+        # Inserir os dados do cliente no banco de dados
+        cursor.execute('''
+            INSERT INTO cliente (nome, cpf_cnpj, endereco, complemento, numero_casa, cep, email, senha)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (cliente_teste, cpf_cnpj, endereco_teste, complemento_casa, numero_casa, cep_teste, registro_cliente_email, registro_cliente_senha))
+
+        conexao.commit()
+        print("Cadastro realizado com sucesso!")
+
+    elif resposta_cliente.lower() == "sim":
+        print("Você já é nosso cliente. Faça login para continuar.")
+        email_cliente = input("Digite seu email: ")
+        senha_cliente = input("Digite sua senha: ")
+
+        # Verificar se o email e a senha correspondem a um cliente cadastrado
+        cursor.execute('''
+            SELECT * FROM cliente WHERE email = ? AND senha = ?
+        ''', (email_cliente, senha_cliente))
+
+        cliente = cursor.fetchone()
+
+        if cliente is not None:
+            print("Login realizado com sucesso!")
+            print("Bem-vindo, {}!".format(cliente[1]))
+            menu_principal_cliente()
+        else:
+            print("Email ou senha inválidos. Tente novamente.")
+
+elif resposta_inicio.lower() == "lojista":
+    # Cadastro de lojista
+    resposta_lojista = input("Você já possui o cadastro de lojista?\nR: ")
+
+    if resposta_lojista.lower() == "nao":
+        print("Vamos começar o seu cadastro então:")
+        # Informações registro do lojista
+        lojista_teste = input("Primeiro, por favor insira o seu nome: ")
+        while not verificar_letras(lojista_teste):
+            lojista_teste = input("Primeiro, por favor insira o seu nome: ")
+
+        cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+        while cpf_cnpj and not verificar_cnpj(cpf_cnpj):
+            print("CNPJ inválido. Por favor, insira um CNPJ válido.")
+            cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+
+        # Verificar se o CNPJ já está cadastrado
+        cursor.execute('''
+            SELECT * FROM lojista WHERE cpf_cnpj = ?
+        ''', (cpf_cnpj,))
+        lojista_existente = cursor.fetchone()
+
+        while lojista_existente:
+            print("CNPJ já cadastrado. Por favor, insira um CNPJ diferente.")
+            cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+            while cpf_cnpj and not verificar_cnpj(cpf_cnpj):
+                print("CNPJ inválido. Por favor, insira um CNPJ válido.")
+                cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+
+            cursor.execute('''
+                SELECT * FROM lojista WHERE cpf_cnpj = ?
+            ''', (cpf_cnpj,))
+            lojista_existente = cursor.fetchone()
+
+        endereco_teste = input("Seu endereço por favor (Sem o número): ")
+        while not verificar_letras(endereco_teste):
+            endereco_teste = input("Seu endereço por favor (Sem o número): ")
+
+        complemento_casa = input("Digite um complemento (Se desejar): ")
+
+        numero_casa = input("Agora insira o número: ")
+        while not verificar_numeros(numero_casa):
+            numero_casa = input("Agora insira o número: ")
+
+        cep_teste = input("Insira o CEP (Somente números): ")
+        while not verificar_numeros(cep_teste):
+            cep_teste = input("Insira o CEP (Somente números): ")
+
+        # Verificar se o CEP já está cadastrado
+        cursor.execute('''
+            SELECT * FROM lojista WHERE cep = ?
+        ''', (cep_teste,))
+        cep_existente = cursor.fetchone()
+
+        while cep_existente:
+            print("CEP já cadastrado. Por favor, insira um CEP diferente.")
+            cep_teste = input("Insira o CEP (Somente números): ")
+            while not verificar_numeros(cep_teste):
+                cep_teste = input("Insira o CEP (Somente números): ")
+
+            cursor.execute('''
+                SELECT * FROM lojista WHERE cep = ?
+            ''', (cep_teste,))
+            cep_existente = cursor.fetchone()
+
+        registro_lojista_email = input("Digite o seu email: ")
+        while not verificar_email(registro_lojista_email):
+            registro_lojista_email = input("Digite o seu email: ")
+
+        # Verificar se o email já está cadastrado
+        cursor.execute('''
+            SELECT * FROM lojista WHERE email = ?
+        ''', (registro_lojista_email,))
+        email_existente = cursor.fetchone()
+
+        while email_existente:
+            print("Email já cadastrado. Por favor, insira um email diferente.")
+            registro_lojista_email = input("Digite o seu email: ")
+            while not verificar_email(registro_lojista_email):
+                print("Email inválido")
+                registro_lojista_email = input("Digite o seu email: ")
+
+            cursor.execute('''
+                SELECT * FROM lojista WHERE email = ?
+            ''', (registro_lojista_email,))
+            email_existente = cursor.fetchone()
+
+        registro_lojista_senha = input("Digite uma senha: ")
+
+        # Inserir os dados do lojista no banco de dados
+        cursor.execute('''
+            INSERT INTO lojista (nome, cpf_cnpj, endereco, complemento, numero_casa, cep, email, senha)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (lojista_teste, cpf_cnpj, endereco_teste, complemento_casa, numero_casa, cep_teste, registro_lojista_email, registro_lojista_senha))
+
+        conexao.commit()
+        print("Cadastro realizado com sucesso!")
+        menu_principal_loja() 
+
+    elif resposta_lojista.lower() == "sim":
+        print("Você já é nosso lojista. Faça login para continuar.")
+        email_lojista = input("Digite seu email: ")
+        senha_lojista = input("Digite sua senha: ")
+
+        # Verificar se o email e a senha correspondem a um lojista cadastrado
+        cursor.execute('''
+            SELECT * FROM lojista WHERE email = ? AND senha = ?
+        ''', (email_lojista, senha_lojista))
+
+        lojista = cursor.fetchone()
+
+        if lojista is not None:
+            print("Login realizado com sucesso!")
+            print("Bem-vindo, {}!".format(lojista[1]))
+            menu_principal_loja()            
+        else:
+            print("Email ou senha inválidos. Tente novamente.")
+
+conexao.close()
 
 def inicio():
     inicio_login=int(input("Você ja possui cadastro com a gente?\n  1 - Sim\n  2 - Nao"))
@@ -596,3 +724,4 @@ def inicio():
         cadastro()
     elif inicio_login > 2 or inicio_login<1:
         print("opção invalida")
+
