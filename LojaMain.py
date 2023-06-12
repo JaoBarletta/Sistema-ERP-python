@@ -576,6 +576,7 @@ if resposta_inicio.lower() == "cliente":
 
         conexao.commit()
         print("Cadastro realizado com sucesso!")
+        menu_principal_cliente()
 
     elif resposta_cliente.lower() == "sim":
         print("Você já é nosso cliente. Faça login para continuar.")
