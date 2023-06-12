@@ -314,40 +314,39 @@ def verificar_cpf(cpf):
 
 #Verificar cnpj
 def verificar_cnpj(cnpj):
-    #Remover pontuação do CNPJ
-    cnpj = cnpj.replace(".","").replace("/","").replace("-","")
+    # Remover pontuação do CNPJ
+    cnpj = cnpj.replace(".", "").replace("/", "").replace("-", "")
 
-    #Verficar se o CNPJ tem 14 dígitos
+    # Verificar se o CNPJ tem 14 dígitos
     if len(cnpj) != 14 or not cnpj.isdigit():
         return False
-    
-    #Verificar se todos os dígitos são iguais, o que indica um CNPJ inválido
+
+    # Verificar se todos os dígitos são iguais, o que indica um CNPJ inválido
     if cnpj == cnpj[0] * 14:
         return False
-    
-    #Verificar o primeiro dígito verificador
-    soma = sum(int(cnpj[i]) * (5 - i if i < 5 else 13 - 1) for i in range(12))
-    digito_1 = (soma % 11)
-    if digito_1 < 2:
-        digito_1 = 0
-    else:
-        digito_1 == 11 - digito_1
+
+    # Verificar o primeiro dígito verificador
+    soma = 0
+    peso = 5
+    for i in range(12):
+        soma += int(cnpj[i]) * peso
+        peso = 5 if peso == 2 else peso - 1
+    digito_1 = 11 - (soma % 11) if (soma % 11) >= 2 else 0
 
     if digito_1 != int(cnpj[12]):
         return False
-    
 
-    #Verificar o segundo dígito verificador
-    soma = sum(int(cnpj[i]) * (6 - i if i < 6 else 14 - i) for i in range(13))
-    digito_2 = (soma % 11)
-    if digito_2 < 2:
-        digito_2 = 0
-    else:
-        digito_2 = 11 - digito_2
+    # Verificar o segundo dígito verificador
+    soma = 0
+    peso = 6
+    for i in range(13):
+        soma += int(cnpj[i]) * peso
+        peso = 6 if peso == 2 else peso - 1
+    digito_2 = 11 - (soma % 11) if (soma % 11) >= 2 else 0
 
     if digito_2 != int(cnpj[13]):
         return False
-    
+
     return True
 
 
@@ -478,17 +477,29 @@ cursor.execute('''
 ''')
 
 # Perguntar se é um cliente ou lojista
-resposta_inicio = input('''Você é um cliente ou lojista? ( Responda "cliente" ou "lojista" ) \nR: ''')
+resposta_inicio = input('''Você é um cliente ou lojista? (Responda "cliente" ou "lojista")\nR: ''')
+
+while not resposta_inicio:
+    print("Resposta vazia. Por favor, responda novamente.")
+    resposta_inicio = input('''Você é um cliente ou lojista? (Responda "cliente" ou "lojista")\nR: ''')
 
 if resposta_inicio.lower() == "cliente":
     # Cadastro de cliente
-    resposta_cliente = input('''Você já possui o cadastro de cliente? ( "sim" ou "nao" )\nR: ''')
+    resposta_cliente = input('''Você já possui o cadastro de cliente? ("sim" ou "nao")\nR: ''')
+
+    while not resposta_cliente:
+        print("Resposta vazia. Por favor, responda novamente.")
+        resposta_cliente = input('''Você já possui o cadastro de cliente? ("sim" ou "nao")\nR: ''')
 
     if resposta_cliente.lower() == "nao":
         print("Vamos começar o seu cadastro então:")
         # Informações registro do cliente
         cliente_teste = input("Primeiro, por favor insira o seu nome: ")
-        while not verificar_letras(cliente_teste):
+        while not cliente_teste or not verificar_letras(cliente_teste):
+            if not cliente_teste:
+                print("Resposta vazia. Por favor, insira o seu nome.")
+            else:
+                print("Nome inválido. Por favor, insira um nome válido.")
             cliente_teste = input("Primeiro, por favor insira o seu nome: ")
 
         cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
@@ -506,7 +517,10 @@ if resposta_inicio.lower() == "cliente":
             print("CPF já cadastrado. Por favor, insira um CPF diferente.")
             cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
             while cpf_cnpj and not verificar_cpf(cpf_cnpj):
-                print("CPF inválido. Por favor, insira um CPF válido.")
+                if not cpf_cnpj:
+                    print("Resposta vazia. Por favor, insira o seu CPF.")
+                else:
+                    print("CPF inválido. Por favor, insira um CPF válido.")
                 cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
 
             cursor.execute('''
@@ -515,38 +529,43 @@ if resposta_inicio.lower() == "cliente":
             cliente_existente = cursor.fetchone()
 
         endereco_teste = input("Seu endereço por favor (Sem o número): ")
-        while not verificar_letras(endereco_teste):
+        while not endereco_teste or not verificar_letras(endereco_teste):
+            if not endereco_teste:
+                print("Resposta vazia. Por favor, insira o seu endereço.")
+            else:
+                print("Endereço inválido. Por favor, insira um endereço válido.")
             endereco_teste = input("Seu endereço por favor (Sem o número): ")
 
-        complemento_casa = input("Digite um complemento para sua casa (Se desejar): ")
+        complemento_casa = input("Digite um complemento para sua casa: ")
+        while not complemento_casa or not verificar_letras(complemento_casa):
+            if not complemento_casa:
+                print("Resposta vazia. Por favor, insira um complemento para sua casa.")
+            else:
+                print("Complemento inválido. Por favor, insira um complemento válido.")
+            complemento_casa = input("Digite um complemento para sua casa: ")
 
         numero_casa = input("Agora insira o número da casa: ")
-        while not verificar_numeros(numero_casa):
+        while not numero_casa or not verificar_numeros(numero_casa):
+            if not numero_casa:
+                print("Resposta vazia. Por favor, insira o número da casa.")
+            else:
+                print("Número inválido. Por favor, insira um número válido.")
             numero_casa = input("Agora insira o número da casa: ")
 
         cep_teste = input("Insira o CEP (Somente números): ")
-        while not verificar_numeros(cep_teste):
+        while cep_teste and not verificar_cep(cep_teste):
+            if not cep_teste:
+                print("Resposta vazia. Por favor, insira o CEP.")
+            else:
+                print("CEP inválido. Por favor, insira um CEP válido.")
             cep_teste = input("Insira o CEP (Somente números): ")
-
-        # Verificar se o CEP já está cadastrado
-        cursor.execute('''
-            SELECT * FROM cliente WHERE cep = ?
-        ''', (cep_teste,))
-        cep_existente = cursor.fetchone()
-
-        while cep_existente:
-            print("CEP já cadastrado. Por favor, insira um CEP diferente.")
-            cep_teste = input("Insira o CEP (Somente números): ")
-            while not verificar_numeros(cep_teste):
-                cep_teste = input("Insira o CEP (Somente números): ")
-
-            cursor.execute('''
-                SELECT * FROM cliente WHERE cep = ?
-            ''', (cep_teste,))
-            cep_existente = cursor.fetchone()
 
         registro_cliente_email = input("Digite o seu email: ")
-        while not verificar_email(registro_cliente_email):
+        while not registro_cliente_email or not verificar_email(registro_cliente_email):
+            if not registro_cliente_email:
+                print("Resposta vazia. Por favor, insira o seu email.")
+            else:
+                print("Email inválido. Por favor, insira um email válido.")
             registro_cliente_email = input("Digite o seu email: ")
 
         # Verificar se o email já está cadastrado
@@ -558,7 +577,11 @@ if resposta_inicio.lower() == "cliente":
         while email_existente:
             print("Email já cadastrado. Por favor, insira um email diferente.")
             registro_cliente_email = input("Digite o seu email: ")
-            while not verificar_email(registro_cliente_email):
+            while not registro_cliente_email or not verificar_email(registro_cliente_email):
+                if not registro_cliente_email:
+                    print("Resposta vazia. Por favor, insira o seu email.")
+                else:
+                    print("Email inválido. Por favor, insira um email válido.")
                 registro_cliente_email = input("Digite o seu email: ")
 
             cursor.execute('''
@@ -597,34 +620,48 @@ if resposta_inicio.lower() == "cliente":
         else:
             print("Email ou senha inválidos. Tente novamente.")
 
+
 elif resposta_inicio.lower() == "lojista":
-    # Cadastro de lojista
-    resposta_lojista = input("Você já possui o cadastro de lojista?\nR: ")
+    # Cadastro de lojistac
+    resposta_lojista = input('''Você já possui o cadastro de lojista? ( "sim" ou "nao" )\nR: ''')
+
+    while not resposta_lojista:
+        print("Resposta vazia.Por favor, responda novamente. ")
+        resposta_lojista = input('''Você já possui o cadastro de lojista? ( "sim" ou "nao" )\nR: ''')
 
     if resposta_lojista.lower() == "nao":
         print("Vamos começar o seu cadastro então:")
         # Informações registro do lojista
         lojista_teste = input("Primeiro, por favor insira o seu nome: ")
-        while not verificar_letras(lojista_teste):
+        while not lojista_teste or verificar_letras(lojista_teste):
+            if not lojista_teste :
+                print("Resposta vazia. Por favor, insira o seu nome.")
+            else:
+                print("Nome inválido. Por favor, insira um nome válido.")
             lojista_teste = input("Primeiro, por favor insira o seu nome: ")
 
-        cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
-        while cpf_cnpj and not verificar_cnpj(cpf_cnpj):
-            print("CNPJ inválido. Por favor, insira um CNPJ válido.")
-            cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+        cpf_cnpj = input("Em seguida, o seu CPF: ")
+        while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+            if not cpf_cnpj:
+                print(("Resposta vazia. Por favor, insira o seu CPF."))
+            else:
+                print("CPF inválido. Por favor, insira um CPF válido.")
+                cpf_cnpj = input("Em seguida, o seu CPF (Se desejar): ")
 
-        # Verificar se o CNPJ já está cadastrado
+
+        # Verificar se o CPF já está cadastrado
         cursor.execute('''
             SELECT * FROM lojista WHERE cpf_cnpj = ?
         ''', (cpf_cnpj,))
         lojista_existente = cursor.fetchone()
 
         while lojista_existente:
-            print("CNPJ já cadastrado. Por favor, insira um CNPJ diferente.")
-            cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
-            while cpf_cnpj and not verificar_cnpj(cpf_cnpj):
-                print("CNPJ inválido. Por favor, insira um CNPJ válido.")
-                cpf_cnpj = input("Em seguida, o seu CNPJ (Se desejar): ")
+            print("CPF já cadastrado. Por favor, insira um CPF diferente.")
+        cpf_cnpj = input("Em seguida, o seu CPF ou CNPJ: ")
+        while cpf_cnpj and not verificar_cpf(cpf_cnpj):
+            print("CPF inválido. Por favor, insira um CPF válido.")
+            cpf_cnpj = input("Em seguida, o seu CPF: ")
+
 
             cursor.execute('''
                 SELECT * FROM lojista WHERE cpf_cnpj = ?
@@ -635,35 +672,22 @@ elif resposta_inicio.lower() == "lojista":
         while not verificar_letras(endereco_teste):
             endereco_teste = input("Seu endereço por favor (Sem o número): ")
 
-        complemento_casa = input("Digite um complemento (Se desejar): ")
+        complemento_casa = input("Digite um complemento para sua casa: ")
+        while not verificar_letras(complemento_casa):
+            complemento_casa = input("Digite um complemento para sua casa: ")
 
         numero_casa = input("Agora insira o número: ")
         while not verificar_numeros(numero_casa):
             numero_casa = input("Agora insira o número: ")
 
         cep_teste = input("Insira o CEP (Somente números): ")
-        while not verificar_numeros(cep_teste):
+        while cep_teste and not verificar_cep(cep_teste):
+            print("CEP inválido.Por favor, insira um CEP válido.")
             cep_teste = input("Insira o CEP (Somente números): ")
-
-        # Verificar se o CEP já está cadastrado
-        cursor.execute('''
-            SELECT * FROM lojista WHERE cep = ?
-        ''', (cep_teste,))
-        cep_existente = cursor.fetchone()
-
-        while cep_existente:
-            print("CEP já cadastrado. Por favor, insira um CEP diferente.")
-            cep_teste = input("Insira o CEP (Somente números): ")
-            while not verificar_numeros(cep_teste):
-                cep_teste = input("Insira o CEP (Somente números): ")
-
-            cursor.execute('''
-                SELECT * FROM lojista WHERE cep = ?
-            ''', (cep_teste,))
-            cep_existente = cursor.fetchone()
 
         registro_lojista_email = input("Digite o seu email: ")
         while not verificar_email(registro_lojista_email):
+            print("Email inválido.Por favor, insira um Email válido.")
             registro_lojista_email = input("Digite o seu email: ")
 
         # Verificar se o email já está cadastrado
@@ -716,13 +740,3 @@ elif resposta_inicio.lower() == "lojista":
             print("Email ou senha inválidos. Tente novamente.")
 
 conexao.close()
-
-def inicio():
-    inicio_login=int(input("Você ja possui cadastro com a gente?\n  1 - Sim\n  2 - Nao"))
-    if inicio_login == 1:
-        login()
-    elif inicio_login == 2:
-        cadastro()
-    elif inicio_login > 2 or inicio_login<1:
-        print("opção invalida")
-
