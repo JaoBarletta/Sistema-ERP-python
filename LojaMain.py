@@ -405,6 +405,34 @@ cursor.execute('''
         senha TEXT
     )
 ''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS produto (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        preco FLOAT,
+        tipo INTEGER,
+        status BOOLEAN
+    )
+''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS pedido (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        cliente_id INTEGER,
+        valor FLOAT
+    )
+''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS pedido_produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pedido_id INTEGER,
+        produto_id INTEGER,
+        quantidade INTEGER
+    )
+''')
+
 def inicio():
 
     print('''
