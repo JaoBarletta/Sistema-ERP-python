@@ -564,7 +564,7 @@ Equipe da loja
 
                 if cliente is not None:
                     # Verificar se a senha corresponde ao email encontrado
-                    if senha_cliente == cliente[2]:
+                    if senha_cliente == cliente[8]:
                         login_sucesso = True
                         print("Login realizado com sucesso!")
                         print("Bem-vindo, {}!".format(cliente[1]))
@@ -704,7 +704,7 @@ Equipe da loja
 
             if lojista is not None:
                 # Verificar se a senha corresponde ao email encontrado
-                if senha_lojista == lojista[2]:
+                if senha_lojista == lojista[8]:
                     login_sucesso = True
                     print("Login realizado com sucesso!")
                     print("Bem-vindo, {}!".format(lojista[1]))
