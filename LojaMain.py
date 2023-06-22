@@ -194,7 +194,7 @@ def menu_principal_cliente(cliente):
                     CEP: {}
                     -----------------------------
                     PRODUTO\t\t\tPREÇO
-                    '''.format(data_hoje, cliente[1], cliente[3], cliente[5], cliente[4], cliente[6], cliente[2]))
+                    '''.format(data_hoje, str(cliente[1]), str(cliente[3]), str(cliente[5]), str(cliente[4]), str(cliente[6]), str(cliente[2])))
 
                 for i in range(len(lista_pedido)):
                     produto_formatado = "{}\t\tR$ {:.2f}".format(lista_pedido[i].ljust(8), lista_valores[i])
@@ -216,29 +216,36 @@ def menu_principal_cliente(cliente):
 # função de menu principal do lojista
 def menu_principal_loja():
     o=1
+    b=0
+    c=1
     while o==1:
         os.system("cls")
-        resposta_menu_loja=int(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[2] - ver os gráficos de vendas diarias ou mensais\n[3] - ver gráficos de lucros\n[4] - ver os produtos que estão no varejo\n[5] -  entrar no menu de compras\n[0] -  voltar ao menu de login\nR="))
+        resposta_menu_loja=int(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[2] - entrar no menu de compras\n[0] -  voltar ao menu de login\nR="))
         while True:
             if resposta_menu_loja == 0:
                 inicio()
+
             elif resposta_menu_loja == 1:
-                os.system("cls")
-                resposta_menu_produtos=int(input("Quais tipos de produtos você quer conferir ?\n[1]- Produtos roupas\n[2]- Produtos escolares\n[3]-  Produtos Comidas\n[0] voltar\nR="))
-                if resposta_menu_produtos == 1:
-                    menu_interativo1(pr,vr)
-                elif resposta_menu_produtos == 2:
-                    menu_interativo1(pe,ve)
-                elif resposta_menu_produtos == 3:
-                    menu_interativo1(pc,vc)
-                elif resposta_menu_produtos > 3 or resposta_menu_produtos < 0:
-                    print("opção invalida")
-                elif resposta_menu_produtos == 0:
-                    break
-                elif  resposta_menu_produtos > 5 or resposta_menu_produtos< 0:
-                    print("opção incorreta")
-            # elif resposta_menu_loja == 2:
-        
+                while c==1:
+                    os.system("cls")
+                    resposta_menu_produtos=int(input("Quais tipos de produtos você quer conferir ?\n[1]- Produtos roupas\n[2]- Produtos escolares\n[3]-  Produtos Comidas\n[0] voltar\nR="))
+                    if resposta_menu_produtos == 1:
+                        menu_interativo1(pr,vr)
+                    elif resposta_menu_produtos == 2:
+                        menu_interativo1(pe,ve)
+                    elif resposta_menu_produtos == 3:
+                        menu_interativo1(pc,vc)
+                    elif resposta_menu_produtos > 3 or resposta_menu_produtos < 0:
+                        print("opção invalida")
+                    elif resposta_menu_produtos == 0:
+                        c=0
+                    elif  resposta_menu_produtos > 5 or resposta_menu_produtos< 0:
+                        print("opção invalida")
+            elif resposta_menu_loja == 2:
+                menu_principal_cliente(b)
+            elif resposta_menu_loja > 3 or resposta_menu_loja < 0 :
+                break
+
                     
 
 #Verificações 
