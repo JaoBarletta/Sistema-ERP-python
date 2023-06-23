@@ -156,12 +156,11 @@ def menu_principal_cliente(cliente):
                 print("opção invalida")
             #encerrar o programa e emitir a nota fiscal
             elif resposta_principal == 0:
-                #pedido_id = criar_pedido(cliente[0], sum(lista_valores))
+                pedido_id = criar_pedido(cliente[0], sum(lista_valores))
                 for produto in lista_pedido:
-                    #criar_pedido_produtos(pedido_id, produto)
-                    print(produto)
+                    criar_pedido_produtos(pedido_id, produto)
                 
-                os.system("cls")
+                #os.system("cls")
                 nota_fiscal = textwrap.dedent('''
                     Obrigado por utilizar nossos produtos e nossa loja !!!
                     Aqui está sua nota fiscal !\n\n\n\n
@@ -185,7 +184,7 @@ def menu_principal_cliente(cliente):
                     -----------------------------
                     TOTAL:\t\tR$ {:.2f}
                     '''.format(sum(lista_valores)))
-                #print(nota_fiscal)
+                print(nota_fiscal)
                 exit()
 
 # função de menu principal do lojista
@@ -292,14 +291,26 @@ def verificar_cep(cep):
     
 def criar_pedido(cliente_id, valor_pedido):
     cursor.execute('''
-                    INSERT INTO pedido (cliente_id, valor)
-                    VALUES (?, ?,)
-                ''', (cliente_id, valor_pedido))
+        INSERT INTO pedido (cliente_id, valor)
+        VALUES (?, ?)
+    ''', (cliente_id, valor_pedido))
     conexao.commit()
     
     cursor.execute("SELECT * FROM pedido ORDER BY rowid DESC LIMIT 1")
-    pedido_id = cursor.fetchone()[0]
+    return cursor.fetchone()[0]
     
+def criar_pedido_produtos(pedido_id, produto):
+    cursor.execute('''
+        SELECT * FROM produto WHERE nome = ?
+    ''', (produto,))
+    produto_id = cursor.fetchone()[0]
+
+    cursor.execute('''
+        INSERT INTO pedido_produtos (pedido_id, produto_id)
+            VALUES (?, ?)
+    ''', (pedido_id, produto_id))
+    conexao.commit()
+
 
 # Obter data de hoje
 data_hoje = date.today()
