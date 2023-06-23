@@ -178,6 +178,8 @@ def menu_principal_cliente(cliente):
                 print("opção invalida")
             #encerrar o programa e emitir a nota fiscal
             elif resposta_principal == 0:
+                pedido_id = criar_pedido(cliente[0], sum(lista_valores))
+                
                 os.system("cls")
                 nota_fiscal = textwrap.dedent('''
                     Obrigado por utilizar nossos produtos e nossa loja !!!
@@ -204,8 +206,6 @@ def menu_principal_cliente(cliente):
                     '''.format(sum(lista_valores)))
                 print(nota_fiscal)
                 exit()
-                p = 0
-                break
 
 # função de menu principal do lojista
 def menu_principal_loja():
@@ -308,6 +308,17 @@ def verificar_cep(cep):
         return True
     else:
         return False
+    
+def criar_pedido(cliente_id, valor_pedido):
+    cursor.execute('''
+                    INSERT INTO pedido (cliente_id, valor)
+                    VALUES (?, ?,)
+                ''', (cliente_id, valor_pedido))
+    conexao.commit()
+    
+    cursor.execute("SELECT * FROM pedido ORDER BY rowid DESC LIMIT 1")
+    pedido_id = cursor.fetchone()[0]
+    
 
 # Obter data de hoje
 data_hoje = date.today()
