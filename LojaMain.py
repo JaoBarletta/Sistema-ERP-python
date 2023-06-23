@@ -178,7 +178,10 @@ def menu_principal_cliente(cliente):
                 print("opção invalida")
             #encerrar o programa e emitir a nota fiscal
             elif resposta_principal == 0:
-                pedido_id = criar_pedido(cliente[0], sum(lista_valores))
+                #pedido_id = criar_pedido(cliente[0], sum(lista_valores))
+                for produto in lista_pedido:
+                    #criar_pedido_produtos(pedido_id, produto)
+                    print(produto)
                 
                 os.system("cls")
                 nota_fiscal = textwrap.dedent('''
@@ -204,7 +207,7 @@ def menu_principal_cliente(cliente):
                     -----------------------------
                     TOTAL:\t\tR$ {:.2f}
                     '''.format(sum(lista_valores)))
-                print(nota_fiscal)
+                #print(nota_fiscal)
                 exit()
 
 # função de menu principal do lojista
@@ -329,7 +332,6 @@ senha_cliente_db=["teste1"]
 #cadastros de lojista
 email_loja_db=["teste2"]
 senha_loja_db=["teste2"]
-
 #lista de produtos para calculos
 
 valores_roupas=[150.00,100.00,180.00,120.00,60.00,300.00,190.00]
@@ -357,6 +359,15 @@ produtos_comidas=[
     "C/Estudante","Café","Refri","Salgados","Suco"
 ]
 
+TIPO_ROUPA = 1
+TIPO_ESCOLA = 2
+TIPO_COMIDA = 3
+
+lista_produtos = []
+lista_produtos.extend([(prod, valor, TIPO_ROUPA) for prod, valor in zip(produtos_roupas, valores_roupas)])
+lista_produtos.extend([(prod, valor, TIPO_ESCOLA) for prod, valor in zip(produtos_escolares, valores_escolares)])
+lista_produtos.extend([(prod, valor, TIPO_COMIDA) for prod, valor in zip(produtos_comidas, valores_comidas)])
+
 pr=produtos_roupas
 pe=produtos_escolares
 pc=produtos_comidas
@@ -364,11 +375,7 @@ pc=produtos_comidas
 lista_pedido=[]
 lista_valores=[]
 
-#inicio do codigo
-
-def cadastro():
-    z=1
-  # Conectar ao banco de dados
+# Conectar ao banco de dados
 conexao = sqlite3.connect('cadastro.db')
 cursor = conexao.cursor()
 
@@ -405,7 +412,7 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS produto (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
-        preco FLOAT,
+        preco REAL,
         tipo INTEGER,
         status BOOLEAN
     )
@@ -415,7 +422,7 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS pedido (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         cliente_id INTEGER,
-        valor FLOAT
+        valor REAL
     )
 ''')
 
@@ -427,6 +434,16 @@ cursor.execute('''
         quantidade INTEGER
     )
 ''')
+
+cursor.execute('SELECT * FROM produto')
+row = cursor.fetchone()
+if not row:
+    for index, produto in enumerate(lista_produtos):
+        cursor.execute('''
+        INSERT INTO produto (id, nome, preco, tipo, status)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (index, produto[0], produto[1], produto[2], 1))
+        conexao.commit()
 
 def inicio():
 
