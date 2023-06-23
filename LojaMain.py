@@ -51,6 +51,7 @@ def menu_interativo1(type):
 #função de menu principal do cliente
 def menu_principal_cliente(cliente):
     p=1
+    h=0
     while p==1 :
         resposta_principal=int(input("""  
 
@@ -60,7 +61,7 @@ def menu_principal_cliente(cliente):
         3 - Produtos comidas
         0 - encerrar atendimento
         Digite o número correspondente ao tipo produto que deseja: """))
-        while True:
+        while h==0:
             #funçao roupas
             if resposta_principal == 1:
                 os.system("cls")
@@ -137,8 +138,6 @@ def menu_principal_cliente(cliente):
                 lista_pedido.append(produtos[resposta_comidas - 1][1])
                 lista_valores.append(produtos[resposta_comidas - 1][2])    
                 
-            elif resposta_principal > 3 or resposta_principal < 0 :
-                print("opção invalida")
             #encerrar o programa e emitir a nota fiscal
             elif resposta_principal == 0:
                 pedido_id = criar_pedido(cliente[0], sum(lista_valores))
@@ -171,6 +170,9 @@ def menu_principal_cliente(cliente):
                     '''.format(sum(lista_valores)))
                 print(nota_fiscal)
                 exit()
+            else:
+                print("opção invalida")
+                h = 1
 
 # função de menu principal do lojista
 def menu_principal_loja():
