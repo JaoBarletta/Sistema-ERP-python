@@ -6,14 +6,20 @@ import datetime
 import textwrap
 import unicodedata
 
-def menu_interativo1(a,b):
+def menu_interativo1(type):
     x=1
     y=1
     while x==1:
         n=0
         os.system("cls")
-        for i in range(len(a)):
-            print("{} {}\t\tR$ {}".format (str(a[i]).center(10),n+1, str(b[i]).ljust(10)))
+        
+        cursor.execute('''
+                SELECT * FROM produtos WHERE tipo = ?
+            ''', (type))
+        produtos = cursor.fetchall()
+        print('ahdasdhksa')
+        for produto in produtos:
+            print("{} {}\t\tR$ {}".format (str(produto[1]).center(10),n+1, str(produto[2]).ljust(10)))
             n=n+1
         resposta_cadastro_itens=str(input("Deseja fazer alguma alteração nos produtos que estão a venda ?\n 1 - sim\n 2- nao\nR= "))
         if resposta_cadastro_itens.lower() == "1":
@@ -74,106 +80,78 @@ def menu_principal_cliente(cliente):
             if resposta_principal == 1:
                 os.system("cls")
                 print("Escolha o tipo de roupa que deseja adquirir")
-
-                for i in range(len(produtos_roupas)):
-                    print("({}) {}\t\tR$ {}".format(i+1, produtos_roupas[i].ljust(10), str(valores_roupas[i]).ljust(10)))
+                
+                cursor.execute('''
+                SELECT * FROM produto WHERE tipo = 1 AND status = 1
+                ''')
+                produtos = cursor.fetchall()
+                for i, produto in enumerate(produtos):
+                    print("({}) {}\t\tR$ {}".format(i+1, produto[1].ljust(10), str(produto[2]).ljust(10)))                    
 
                 print("[0] Voltar para o menu principal")
                 print("-" * 50)
                 print("carrinho de compras", lista_pedido, sep=" ")
                 print("total: R$", sum(lista_valores))
                 #funções roupa
+                
                 resposta_roupa = int(input(" Por Favor, insira o numero do produto que você deseja !!!!\nProduto:"))
-                if resposta_roupa == 1:
-            
-                    lista_pedido.append(produtos_roupas[0])
-                    lista_valores.append(valores_roupas[0])
-                elif resposta_roupa == 2:
-                    lista_pedido.append(produtos_roupas[1])
-                    lista_valores.append(valores_roupas[1])
-                elif resposta_roupa == 3:
-                    lista_pedido.append(produtos_roupas[2])
-                    lista_valores.append(valores_roupas[2])
-                elif resposta_roupa == 4:
-                    lista_pedido.append(produtos_roupas[3])
-                    lista_valores.append(valores_roupas[3])
-                elif resposta_roupa == 5:
-                    lista_pedido.append(produtos_roupas[4])
-                    lista_valores.append(valores_roupas[4])
-                elif resposta_roupa == 6 :
-                    lista_pedido.append(produtos_roupas[5])
-                    lista_valores.append(valores_roupas[5])    
-                elif resposta_roupa == 7:
-                    lista_pedido.append(produtos_roupas[6])
-                    lista_valores.append(valores_roupas[6])
-                elif resposta_roupa > 7 or resposta_roupa < 0 :
-                    print("Opção Inválida")
-                elif resposta_roupa == 0:
+                
+                if(resposta_roupa == 0):
                     break
+                
+                lista_pedido.append(produtos[resposta_roupa - 1][1])
+                lista_valores.append(produtos[resposta_roupa - 1][2])
 
             #funções escolares 
             elif resposta_principal == 2:
                 os.system("cls")
                 print("Escolha o tipo de escolares que deseja adquirir")
 
-                for i in range(len(produtos_escolares)):
-                    print("({}) {}\t\tR$ {}".format(i+1, produtos_escolares[i].ljust(10), str(valores_escolares[i]).ljust(10)))
-
+                cursor.execute('''
+                SELECT * FROM produto WHERE tipo = 2 AND status = 1
+                ''')
+                produtos = cursor.fetchall()
+                for i, produto in enumerate(produtos):
+                    print("({}) {}\t\tR$ {}".format(i+1, produto[1].ljust(10), str(produto[2]).ljust(10)))
+                    
                 print("[0] Voltar para o menu principal")
                 print("-" * 50)
                 print(lista_pedido)
                 print("total: R$", sum(lista_valores))
+                
                 resposta_escolares = int(input(" Por Favor, insira o numero do produto que você deseja !!!!\nProduto:"))
-                if resposta_escolares == 1:
-                    lista_pedido.append(produtos_escolares[0])
-                    lista_valores.append(valores_escolares[0])
-                elif resposta_escolares == 2:
-                    lista_pedido.append(produtos_escolares[1])
-                    lista_valores.append(valores_escolares[1])
-                elif resposta_escolares == 3 :
-                    lista_pedido.append(produtos_escolares[2])
-                    lista_valores.append(valores_escolares[2])
-                elif resposta_escolares == 4:
-                    lista_pedido.append(produtos_escolares[3])
-                    lista_valores.append(valores_escolares[3])
-                elif resposta_escolares > 5 or resposta_escolares < 0 :
-                    print("Opção Inválida") 
-                elif resposta_escolares == 0:
+                
+                if(resposta_escolares == 0):
                     break
-        
-                    #funções comidas 
-        
+                
+                lista_pedido.append(produtos[resposta_escolares - 1][1])
+                lista_valores.append(produtos[resposta_escolares - 1][2])
+            
+            #funções comidas 
             elif resposta_principal == 3:
                 os.system("cls")
                 print("Escolha o tipo de produtos que deseja adquirir")
 
-                for i in range(len(produtos_comidas)):
-                    print("({}) {}\t\tR$ {}".format(i+1, produtos_comidas[i], str(valores_comidas[i]).ljust(10)))
-
+                cursor.execute('''
+                SELECT * FROM produto WHERE tipo = 3 AND status = 1
+                ''')
+                produtos = cursor.fetchall()
+                for i, produto in enumerate(produtos):
+                    print("({}) {}\t\tR$ {}".format(i+1, produto[1].ljust(10), str(produto[2]).ljust(10))) 
+                    
                 print("[0] Voltar para o menu principal")
                 print("-" * 50)
                 print(lista_pedido)
                 print("total: R$", sum(lista_valores))
+                
                 resposta_comidas = int(input(" Por Favor, insira o numero do produto que você deseja !!!!\nProduto:"))
-                if resposta_comidas == 1:
-                    lista_pedido.append(produtos_comidas[0])
-                    lista_valores.append(valores_comidas[0])
-                elif resposta_comidas == 2:
-                    lista_pedido.append(produtos_comidas[1])
-                    lista_valores.append(valores_comidas[1])
-                elif resposta_comidas == 3:
-                    lista_pedido.append(produtos_comidas[2])
-                    lista_valores.append(valores_comidas[2])
-                elif resposta_comidas == 4:
-                    lista_pedido.append(produtos_comidas[3])
-                    lista_valores.append(valores_comidas[3])
-                elif resposta_comidas == 5:
-                    lista_pedido.append(produtos_comidas[4])
-                    lista_valores.append(valores_comidas[4])
-                elif resposta_comidas > 5 or resposta_comidas < 0 :
-                    print("Opção Inválida")
-                elif resposta_comidas == 0:
+                
+                if(resposta_comidas == 0):
                     break
+                
+                lista_pedido.append(produtos[resposta_comidas - 1][1])
+                lista_valores.append(produtos[resposta_comidas - 1][2])    
+                
             elif resposta_principal > 3 or resposta_principal < 0 :
                 print("opção invalida")
             #encerrar o programa e emitir a nota fiscal
@@ -227,11 +205,11 @@ def menu_principal_loja():
                     os.system("cls")
                     resposta_menu_produtos=int(input("Quais tipos de produtos você quer conferir ?\n[1]- Produtos roupas\n[2]- Produtos escolares\n[3]-  Produtos Comidas\n[0] voltar\nR="))
                     if resposta_menu_produtos == 1:
-                        menu_interativo1(pr,vr)
+                        menu_interativo1(TIPO_ROUPA)
                     elif resposta_menu_produtos == 2:
-                        menu_interativo1(pe,ve)
+                        menu_interativo1(TIPO_ESCOLA)
                     elif resposta_menu_produtos == 3:
-                        menu_interativo1(pc,vc)
+                        menu_interativo1(TIPO_COMIDA)
                     elif resposta_menu_produtos > 3 or resposta_menu_produtos < 0:
                         print("opção invalida")
                     elif resposta_menu_produtos == 0:
