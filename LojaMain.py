@@ -6,7 +6,6 @@ import datetime
 import textwrap
 import unicodedata
 
-
 def menu_interativo1(a,b):
     x=1
     y=1
@@ -112,7 +111,6 @@ def menu_principal_cliente(cliente):
                 elif resposta_roupa == 0:
                     break
 
-            
             #funções escolares 
             elif resposta_principal == 2:
                 os.system("cls")
@@ -209,10 +207,6 @@ def menu_principal_cliente(cliente):
                 p = 0
                 break
 
-
-
-                
-
 # função de menu principal do lojista
 def menu_principal_loja():
     o=1
@@ -246,13 +240,10 @@ def menu_principal_loja():
             elif resposta_menu_loja > 3 or resposta_menu_loja < 0 :
                 break
 
-                    
-
 #Verificações 
 
 def remover_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if not unicodedata.combining(c))
-
 
 #Verificar CPF
 def verificar_cpf(cpf):
@@ -318,7 +309,6 @@ def verificar_cep(cep):
     else:
         return False
 
-
 # Obter data de hoje
 data_hoje = date.today()
 
@@ -346,8 +336,6 @@ cadastro_complemento=[]
 cadastro_numero_casa=[]
 cadastro_cep=[]
 
-
-
 #lista de produtos para o menu 
 produtos_roupas=[
     "Tenis","Camisa","Jaqueta","Calça","Boné","Relogio","Perfume",
@@ -365,11 +353,7 @@ pc=produtos_comidas
 lista_pedido=[]
 lista_valores=[]
 
-
 #inicio do codigo
-
-
-
 
 def cadastro():
     z=1
@@ -750,8 +734,6 @@ Equipe da loja
             else:
                 print("Email não cadastrado. Tente novamente.")
 
-
     conexao.close()
 
 inicio()
-
