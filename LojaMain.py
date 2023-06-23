@@ -24,7 +24,7 @@ def menu_interativo1(type):
         if resposta_cadastro_itens.lower() == "1":
             os.system("cls")
             while y==1:
-                resposta_interação=str(input("deseja fazer que tipo de alteração?\n[1] - adicionar itens\n[2]- remover alguns itens\n[3]- refazer toda a lista\n[0]- voltar ao menu principal\nR="))
+                resposta_interação=str(input("deseja fazer que tipo de alteração?\n[1] - adicionar itens\n[2]- remover alguns itens\n[0]- voltar ao menu principal\nR="))
                 if resposta_interação == "1":
                     os.system("cls")
                     nome_produto=str(input("Qual item você deseja adicionar ? "))
@@ -43,23 +43,6 @@ def menu_interativo1(type):
                     
                     remover_item(produtos[remover_itens - 1])
                     
-                elif resposta_interação == "3":
-                    l=1
-                    os.system("cls")
-                    del a[:]
-                    del b[:]
-                    while l==1:
-                        n=0
-                        for i in range(len (a)):
-                            print("{} {}\t\tR$ {}".format(n+1 ,str(a[i]).center(10), str(b[i]).ljust(10)))
-                            n+=1
-                        adicionar_itens=str(input("Qual item você deseja adicionar ? "))
-                        if adicionar_itens == "":
-                            l=0
-                        else:
-                            valor_adicionar=float(input("Qual o valor do produto que você deseja adicionar ?\nR$"))
-                            a.append(adicionar_itens)
-                            b.append(valor_adicionar)
                 if resposta_interação.lower() == '0':
                     y=0
         if resposta_cadastro_itens.lower() == "2":
@@ -196,7 +179,7 @@ def menu_principal_loja():
     c=1
     while o==1:
         os.system("cls")
-        resposta_menu_loja=int(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[2] - entrar no menu de compras\n[0] -  voltar ao menu de login\nR="))
+        resposta_menu_loja=int(input(f"Olá seja bem vindo ao gerenciamento de estoque\no que você precisa para hoje ?\n[1] - Ver estoque dos produtos\n[0] -  voltar ao menu de login\nR="))
         while True:
             if resposta_menu_loja == 0:
                 inicio()
@@ -217,9 +200,8 @@ def menu_principal_loja():
                         c=0
                     elif  resposta_menu_produtos > 5 or resposta_menu_produtos< 0:
                         print("opção invalida")
-            elif resposta_menu_loja == 2:
-                menu_principal_cliente(b)
-            elif resposta_menu_loja > 3 or resposta_menu_loja < 0 :
+
+            else:
                 break
 
 #Verificações 
