@@ -14,12 +14,11 @@ def menu_interativo1(type):
         os.system("cls")
         
         cursor.execute('''
-                SELECT * FROM produtos WHERE tipo = ?
-            ''', (type))
+            SELECT * FROM produto WHERE tipo = ?
+        ''', (type,))
         produtos = cursor.fetchall()
-        print('ahdasdhksa')
         for produto in produtos:
-            print("{} {}\t\tR$ {}".format (str(produto[1]).center(10),n+1, str(produto[2]).ljust(10)))
+            print("{} {} {}\t\tR$ {}".format (str(produto[1]).center(10),n+1, "ativo" if produto[4] == 1 else "inativo", str(produto[2]).ljust(10)))
             n=n+1
         resposta_cadastro_itens=str(input("Deseja fazer alguma alteração nos produtos que estão a venda ?\n 1 - sim\n 2- nao\nR= "))
         if resposta_cadastro_itens.lower() == "1":
@@ -28,19 +27,22 @@ def menu_interativo1(type):
                 resposta_interação=str(input("deseja fazer que tipo de alteração?\n[1] - adicionar itens\n[2]- remover alguns itens\n[3]- refazer toda a lista\n[0]- voltar ao menu principal\nR="))
                 if resposta_interação == "1":
                     os.system("cls")
-                    adicionar_itens=str(input("Qual item você deseja adicionar ? "))
-                    valor_adicionar=float(input("Qual o valor do produto que você deseja adicionar ?\nR$"))
-                    a.append(adicionar_itens)
-                    b.append(valor_adicionar)
+                    nome_produto=str(input("Qual item você deseja adicionar ? "))
+                    valor_produto=float(input("Qual o valor do produto que você deseja adicionar ?\nR$"))
+                    
+                    adicionar_produto(nome_produto, valor_produto, type)
+                    
                 elif resposta_interação == "2":
                     os.system("cls")
                     n=0
-                    for i in range(len (a)):
-                        print("{} {}\t\tR$ {}".format(n+1, str(a[i]).center(10), str(b[i]).ljust(10)))
-                        n+=1
+                    for produto in produtos:
+                        print("{} {} {}\t\tR$ {}".format (str(produto[1]).center(10),n+1, "ativo" if produto[3] == 1 else "inativo", str(produto[2]).ljust(10)))
+                        n=n+1
+                        
                     remover_itens=int(input("Por favor, informe qual item você deseja remover: "))
-                    del a[remover_itens - 1] 
-                    del b[remover_itens - 1]
+                    
+                    remover_item(produtos[remover_itens - 1])
+                    
                 elif resposta_interação == "3":
                     l=1
                     os.system("cls")
@@ -310,7 +312,19 @@ def criar_pedido_produtos(pedido_id, produto):
             VALUES (?, ?)
     ''', (pedido_id, produto_id))
     conexao.commit()
-
+    
+def adicionar_produto(nome, valor, tipo):
+    cursor.execute('''
+        INSERT INTO produto (nome, preco, tipo, status)
+            VALUES (?, ?, ?, ?)
+        ''', (nome, valor, tipo, 1))
+    conexao.commit()
+    
+def remover_item(item):
+    cursor.execute('''
+        UPDATE produto SET status = 0 WHERE nome = ? AND tipo = ?
+    ''', (item[1], item[3]))
+    conexao.commit()
 
 # Obter data de hoje
 data_hoje = date.today()
