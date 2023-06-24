@@ -53,6 +53,7 @@ def menu_principal_cliente(cliente):
     p=1
     h=0
     while p==1 :
+        os.system("cls")
         resposta_principal=int(input("""  
 
         Escolha os tipos de produtos que você deseja ver e nossa loja 
@@ -144,7 +145,7 @@ def menu_principal_cliente(cliente):
                 for produto in lista_pedido:
                     criar_pedido_produtos(pedido_id, produto)
                 
-                #os.system("cls")
+                os.system("cls")
                 nota_fiscal = textwrap.dedent('''
                     Obrigado por utilizar nossos produtos e nossa loja !!!
                     Aqui está sua nota fiscal !\n\n\n\n
@@ -433,7 +434,7 @@ if not row:
         conexao.commit()
 
 def inicio():
-
+    os.system("cls")
     print('''
 Bem-vindo à nossa loja!
 
@@ -468,6 +469,7 @@ Equipe da loja
         resposta_cliente = remover_acentos(resposta_cliente.lower())
 
         if resposta_cliente.lower() == "nao":
+            os.system("cls")
             print("Vamos começar o seu cadastro então:")
             # Informações registro do cliente
             cliente_teste = input("Primeiro, por favor insira o seu nome: ")
@@ -583,6 +585,7 @@ Equipe da loja
             inicio()
 
         elif resposta_cliente.lower() == "sim":
+            os.system("cls")
             login_sucesso = False
 
             while not login_sucesso:
@@ -610,6 +613,7 @@ Equipe da loja
 
 
     elif resposta_inicio.lower() == "lojista":
+       
         # Cadastro de lojista
         resposta_lojista = input('Você já possui o cadastro de lojista? ("Sim" ou "Não")\nR: ')
 
@@ -624,6 +628,7 @@ Equipe da loja
 
 
         if resposta_lojista.lower() == "nao":
+                os.system("cls")
                 print("Vamos começar o seu cadastro então:")
                 # Informações de registro do lojista
                 lojista_teste = input("Primeiro, por favor insira o seu nome: ")
@@ -712,6 +717,10 @@ Equipe da loja
 
                 registro_lojista_senha = input("Digite uma senha: ")
 
+                # Correção do CPF Nulo
+                if not cpf_cnpj:
+                        cpf_cnpj = None
+
                 # Inserir os dados do lojista no banco de dados
                 cursor.execute('''
                     INSERT INTO lojista (nome, cpf_cnpj, endereco, complemento, numero_casa, cep, email, senha)
@@ -723,6 +732,7 @@ Equipe da loja
                 menu_principal_loja() 
 
         elif resposta_lojista.lower() == "sim":
+            os.system("cls")
             login_sucesso = False
 
         while not login_sucesso:
